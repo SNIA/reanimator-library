@@ -97,6 +97,9 @@ typedef void (DataSeriesOutputModule::*SysCallArgsMapFuncPtr)(void **,
 // map<extent_name, SysCallArgsMapFuncPtr>
 typedef std::unordered_map<std::string, SysCallArgsMapFuncPtr> FuncPtrMap;
 
+// map<syscall_name, syscall_number>
+typedef std::unordered_map<std::string, int> SyscallNameNumberMap;
+
 extern unsigned nsyscalls;
 
 class DataSeriesOutputModule {
@@ -190,6 +193,8 @@ private:
 
   std::string field_names[MAX_SYSCALL_FIELDS];
 
+  SyscallNameNumberMap _syscall_name_num_map;
+
   // Disable copy constructor
   DataSeriesOutputModule(const DataSeriesOutputModule&);
 
@@ -222,6 +227,12 @@ private:
    * of it corresponding args map function
    */
   void initArgsMapFuncPtr();
+  
+  /*
+   * Creates mapping of syscall name with the syscall
+   * number
+   */
+  void initSyscallNameNumberMap();
 
   // Initializes all the caches with NULL values
   void initCache();
