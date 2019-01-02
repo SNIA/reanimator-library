@@ -316,7 +316,6 @@ void DataSeriesOutputModule::initSyscallNameNumberMap() {
       syscall_name_num_map[name] = stoi(number);
     }
   }
-  std::cout << " SYSCALL NAME NUMBER MAP SIZE " << _syscall_name_num_map.size() << std::endl;
 }
 /*
  * Register the record and field values into DS fields.
@@ -369,7 +368,7 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
 
   /* set time called field */
   if (common_fields[DS_COMMON_FIELD_TIME_CALLED] != NULL) {
-    if (scno == -100) {
+    if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
       time_called_Tfrac = *((uint64_t *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
     } else {
       // Convert tv_time_called to Tfracs
@@ -381,7 +380,7 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
 
   /* set time returned field */
   if (common_fields[DS_COMMON_FIELD_TIME_RETURNED] != NULL) {
-    if (scno == -100) {
+    if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
       time_returned_Tfrac = *((uint64_t *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
     } else {
       // Convert tv_time_returned to Tfracs
@@ -415,8 +414,8 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
       common_fields[DS_COMMON_FIELD_ERRNO_NUMBER];
   }
 
-  if (scno == -100) {
-     scno = _syscall_name_num_map[extent_name];
+  if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
+     scno = syscall_name_num_map[extent_name];
   }
 
   if (scno >= 0) {
