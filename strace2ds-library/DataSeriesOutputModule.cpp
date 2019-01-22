@@ -374,8 +374,8 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
       // Convert tv_time_called to Tfracs
       time_called_Tfrac = timeval_to_Tfrac(
         *(struct timeval *) common_fields[DS_COMMON_FIELD_TIME_CALLED]);
-      sys_call_args_map[SYSCALL_FIELD_TIME_CALLED] = &time_called_Tfrac;
     }
+    sys_call_args_map[SYSCALL_FIELD_TIME_CALLED] = &time_called_Tfrac;
   }
 
   /* set time returned field */
@@ -386,8 +386,8 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
       // Convert tv_time_returned to Tfracs
       time_returned_Tfrac = timeval_to_Tfrac(
         *(struct timeval *) common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
-      sys_call_args_map[SYSCALL_FIELD_TIME_RETURNED] = &time_returned_Tfrac;
     }
+    sys_call_args_map[SYSCALL_FIELD_TIME_RETURNED] = &time_returned_Tfrac;
   }
 
   /* set executing pid field */
