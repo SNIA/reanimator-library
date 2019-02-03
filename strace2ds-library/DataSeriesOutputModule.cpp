@@ -330,7 +330,7 @@ void DataSeriesOutputModule::initSyscallNameNumberMap() {
  * @param v_args: represent the helper arguments obtained from strace which are
  *                copied from the address space of actual process being traced.
  */
-bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
+bool DataSeriesOutputModule::writeRecord(const char *extent_name_arg, long *args,
 					 void
 					 *common_fields[DS_NUM_COMMON_FIELDS],
 					 void **v_args) {
@@ -344,6 +344,7 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
   FieldMap *field_map = NULL;
   config_table_entry_pair **extent_config_table_ = NULL;
   int scno = -1;
+  std::string extent_name(extent_name_arg);
 
   memset(sys_call_args_map, 0, sizeof(void*) * MAX_SYSCALL_FIELDS);
   /*
@@ -416,6 +417,10 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name, long *args,
 
   if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
      scno = syscall_name_num_map[extent_name];
+
+     if (extent_name == "newfstat") {
+       extent_name = "fstat";
+     }
   }
 
   if (scno >= 0) {
