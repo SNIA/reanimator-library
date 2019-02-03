@@ -29,6 +29,7 @@
 #define USE_ENUMS
 #include <cassert>
 #include <cstring>
+#include <string>
 
 #include <iostream>
 #include <utility>
@@ -235,6 +236,11 @@ private:
    * number
    */
   void initSyscallNameNumberMap();
+
+  /*
+   * name conversion for the syscalls that named differently
+   */
+  void syscall_name_conversion(std::string *extent_name);
 
   // Initializes all the caches with NULL values
   void initCache();

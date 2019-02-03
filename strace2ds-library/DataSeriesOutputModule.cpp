@@ -317,6 +317,16 @@ void DataSeriesOutputModule::initSyscallNameNumberMap() {
     }
   }
 }
+
+/*
+ * conversions for system calls that is named differently
+ */
+void DataSeriesOutputModule::syscall_name_conversion(std::string *extent_name) {
+  if (*extent_name == "newfstat") {
+    *extent_name = "fstat";
+  }
+}
+
 /*
  * Register the record and field values into DS fields.
  *
@@ -417,10 +427,7 @@ bool DataSeriesOutputModule::writeRecord(const char *extent_name_arg, long *args
 
   if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
      scno = syscall_name_num_map[extent_name];
-
-     if (extent_name == "newfstat") {
-       extent_name = "fstat";
-     }
+     syscall_name_conversion(&extent_name);
   }
 
   if (scno >= 0) {
