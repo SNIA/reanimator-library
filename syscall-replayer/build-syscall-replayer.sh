@@ -146,8 +146,8 @@ runcmd cd "${repositoryDir}"
 [[ -d "DataSeries" ]] || runcmd git clone https://github.com/dataseries/DataSeries.git
 [[ -d "gperftools" ]] || runcmd git clone https://github.com/gperftools/gperftools.git
 [[ -d "oneTBB" ]] || runcmd git clone https://github.com/oneapi-src/oneTBB.git
-[[ -d "trace2model" ]] || runcmd git clone https://github.com/sbu-fsl/trace2model.git
-[[ -d "fsl-strace" ]] || runcmd git clone https://github.com/sbu-fsl/fsl-strace.git
+[[ -d "reanimator-library" ]] || runcmd git clone https://github.com/SNIA/reanimator-library.git
+[[ -d "reanimator-strace" ]] || runcmd git clone https://github.com/SNIA/reanimator-strace.git
 
 # Building Lintel
 # ---------------
@@ -200,7 +200,7 @@ runcmd cd "${repositoryDir}"
 
 # Building strace2ds-library
 # --------------------------
-runcmd cd trace2model/strace2ds-library
+runcmd cd reanimator-library/strace2ds-library
 runcmd autoreconf -v -i
 runcmd rm -rf BUILD
 runcmd mkdir -p BUILD
@@ -223,9 +223,9 @@ else
 fi
 runcmd cd "${repositoryDir}"
 
-# Building fsl-strace
+# Building reanimator-strace
 # -------------------
-runcmd cd fsl-strace
+runcmd cd reanimator-strace
 runcmd ./bootstrap
 runcmd mkdir -p BUILD
 runcmd cd BUILD
