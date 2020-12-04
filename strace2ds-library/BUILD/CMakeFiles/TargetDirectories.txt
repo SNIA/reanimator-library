@@ -1,7 +1,0 @@
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/install/strip.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/edit_cache.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/strace2ds.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/rebuild_cache.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/list_install_components.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/install/local.dir
-/home/lukas/reanimator-library-cmake/strace2ds-library/BUILD/CMakeFiles/install.dir
