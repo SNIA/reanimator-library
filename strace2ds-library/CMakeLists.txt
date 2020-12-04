@@ -113,5 +113,9 @@ set(STRACE2DS_INCLUDES
     include/strace2ds-enums.h
     include/strace2ds.h)
 add_library(strace2ds STATIC ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
+add_library(strace2ds_shared SHARED ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
+set_target_properties(strace2ds_shared PROPERTIES OUTPUT_NAME strace2ds)
 target_link_libraries(strace2ds DataSeries Lintel tcmalloc ${LIBXML2_LIBRARIES})
-install(TARGETS strace2ds CONFIGURATIONS Booty LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/strace2ds)
+target_link_libraries(strace2ds_shared DataSeries Lintel tcmalloc ${LIBXML2_LIBRARIES})
+install(TARGETS strace2ds ARCHIVE DESTINATION /usr/local/strace2ds/lib)
+install(TARGETS strace2ds_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/strace2ds/lib)
