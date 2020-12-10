@@ -4,3 +4,5 @@
 *.so
 *.xml
 autom4te.cache
+BUILD/
+build/
