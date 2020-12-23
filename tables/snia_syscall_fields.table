@@ -1,5 +1,5 @@
 # SNIA SYSCALL TABLE FILE
-# DO NOT EDIT BY HAND: Auto-generated on Wed Dec  9 23:13:54 2020
+# DO NOT EDIT BY HAND: Auto-generated on Wed Dec 23 12:58:49 2020
 # Format: syscall_name syscall_id field_id field_name is_nullable type
 Common	0	309	time_called	1	int64
 Common	0	311	time_returned	1	int64
