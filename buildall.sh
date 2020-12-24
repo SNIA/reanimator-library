@@ -5,7 +5,6 @@
 ####################
 install=false
 customDataseriesDir=false
-# TODO: Find a sensible default install directory
 installDir="./build"
 dataseriesDir=""
 

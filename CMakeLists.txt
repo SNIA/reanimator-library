@@ -115,6 +115,8 @@ set(STRACE2DS_INCLUDES
     include/DataSeriesOutputModule.hpp
     include/strace2ds-enums.h
     include/strace2ds.h)
+set(STRACE2DS_TABLES
+    tables/snia_syscall_fields.table)
 add_library(strace2ds STATIC ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 add_library(strace2ds_shared SHARED ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 set_target_properties(strace2ds_shared PROPERTIES OUTPUT_NAME strace2ds)
@@ -123,3 +125,4 @@ target_link_libraries(strace2ds_shared PUBLIC DataSeries Lintel tcmalloc ${LIBXM
 install(TARGETS strace2ds ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(TARGETS strace2ds_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${STRACE2DS_INCLUDES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(FILES ${STRACE2DS_TABLES} DESTINATION ${CMAKE_INSTALL_PREFIX}/tables)
