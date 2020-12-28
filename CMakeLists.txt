@@ -3,10 +3,16 @@ project(strace2ds)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-O4")
 find_package(LibXml2 REQUIRED)
-if(NOT EXISTS ${DATASERIES_DIR})
-    set(DATASERIES_DIR ../DataSeries)
-endif()
-include_directories(${PROJECT_SOURCE_DIR}/include ${DATASERIES_DIR}/include ${LIBXML2_INCLUDE_DIR})
+find_library(LINTEL_LIBRARY
+    NAMES Lintel libLintel
+    REQUIRED)
+find_library(DATASERIES_LIBRARY
+    NAMES DataSeries libDataSeries
+    REQUIRED)
+find_library(TCMALLOC_LIBRARY
+    NAMES TCMalloc libtcmalloc tcmalloc
+    REQUIRED)
+include_directories(${PROJECT_SOURCE_DIR}/include ${CMAKE_INSTALL_PREFIX}/include ${LIBXML2_INCLUDE_DIR})
 set(STRACE2DS_SRCS
     src/DataSeriesOutputModule.cpp
     src/MakeCloseArgsMap.cpp
@@ -120,8 +126,8 @@ set(STRACE2DS_TABLES
 add_library(strace2ds STATIC ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 add_library(strace2ds_shared SHARED ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 set_target_properties(strace2ds_shared PROPERTIES OUTPUT_NAME strace2ds)
-target_link_libraries(strace2ds DataSeries Lintel tcmalloc ${LIBXML2_LIBRARIES})
-target_link_libraries(strace2ds_shared DataSeries Lintel tcmalloc ${LIBXML2_LIBRARIES})
+target_link_libraries(strace2ds ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
+target_link_libraries(strace2ds_shared ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
 install(TARGETS strace2ds ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(TARGETS strace2ds_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${STRACE2DS_INCLUDES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)

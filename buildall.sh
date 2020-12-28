@@ -3,10 +3,13 @@
 ####################
 # Script variables #
 ####################
+
+numberOfCores="$(nproc --all)"
 install=false
-customDataseriesDir=false
-installDir="./build"
-dataseriesDir=""
+rootDir="$(dirname $(realpath $0))"
+buildDir="${rootDir}/build"
+repositoryDir="${buildDir}/repositories"
+installDir="${buildDir}"
 
 ####################
 # Script functions #
@@ -60,8 +63,8 @@ while [[ $# -gt 0 ]]; do
             ;;
         --install-dir)
             shift # past argument
-            installDir="$1"
-            shift # past argument
+            installDir="$(realpath "$1" || exit $?)"
+            shift # past value
             ;;
         -h|--help)
             printUsage
@@ -73,34 +76,67 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-numberOfCores="$(nproc --all)"
-runcmd /bin/rm -rf build
-runcmd mkdir -p build
+if $install; then
+    installDir="/usr/local"
+fi
+
+runcmd /bin/rm -rf "${buildDir}"
+runcmd mkdir -p "${buildDir}"
 runcmd mkdir -p xml
 runcmd cd tables
 runcmd perl gen-xml-enums.pl
 runcmd cd ../
-runcmd cp -r ./xml build
-runcmd cd build
+runcmd cp -r ./xml "${buildDir}"
+runcmd cd "${buildDir}"
 
-if [[ "${install}" == true ]]; then
-    if [[ "${customDataseriesDir}" == true ]]; then
-        runcmd cmake -DCMAKE_INSTALL_PREFIX:PATH="${installDir}"/strace2ds -DDATASERIES_DIR:PATH="${dataseriesDir}" ../
-    else
-        runcmd cmake -DCMAKE_INSTALL_PREFIX:PATH="${installDir}"/strace2ds ../
-    fi
+# Cloning all repositories
+runcmd mkdir -p "${repositoryDir}"
+runcmd cd "${repositoryDir}"
+[[ -d "Lintel" ]] || runcmd git clone https://github.com/dataseries/Lintel.git
+[[ -d "DataSeries" ]] || runcmd git clone https://github.com/dataseries/DataSeries.git
+[[ -d "gperftools" ]] || runcmd git clone https://github.com/gperftools/gperftools.git
+
+# Building Lintel
+# ---------------
+runcmd cd Lintel
+runcmd cmake -DCMAKE_INSTALL_PREFIX="${installDir}" .
+if $install; then
+    runcmd sudo make -j"${numberOfCores}" install
 else
-    if [[ "${customDataseriesDir}" == true ]]; then
-        runcmd -DDATASERIES_DIR:PATH="${dataseriesDir}" ../
-    else
-        runcmd cmake ../
-    fi
+    runcmd make -j"${numberOfCores}" install
 fi
+runcmd cd "${repositoryDir}"
 
+# Building DataSeries
+# -------------------
+runcmd cd DataSeries
+runcmd cmake -DCMAKE_INSTALL_PREFIX="${installDir}" .
+if $install; then
+    runcmd sudo make -j"${numberOfCores}" install
+else
+    runcmd make -j"${numberOfCores}" install
+fi
+runcmd cd "${repositoryDir}"
+
+# Building tcmalloc
+# -----------------
+runcmd cd gperftools
+runcmd ./autogen.sh
+runcmd ./configure --prefix="${installDir}" "${configArgs}"
+runcmd make -j"${numberOfCores}"
+if [[ "${install}" == true ]]; then
+    runcmd sudo make -j"${numberOfCores}" install
+else
+    runcmd make -j"${numberOfCores}" install
+fi
+runcmd cd "${repositoryDir}"
+
+runcmd cd "${buildDir}"
+runcmd cmake -DCMAKE_INSTALL_PREFIX:PATH="${installDir}" ../
 runcmd make clean
 runcmd make -j"${numberOfCores}"
 
-if [[ "${install}" == true ]]; then
+if $install; then
     runcmd sudo make -j"${numberOfCores}" install
 else
     runcmd make -j"${numberOfCores}" install
