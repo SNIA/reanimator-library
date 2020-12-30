@@ -80,6 +80,7 @@ if $install; then
     installDir="/usr/local"
 fi
 
+# Set up the build directory
 runcmd /bin/rm -rf "${buildDir}"
 runcmd mkdir -p "${buildDir}"
 runcmd mkdir -p xml
@@ -131,11 +132,12 @@ else
 fi
 runcmd cd "${repositoryDir}"
 
+# Building strace2ds
+# ------------------
 runcmd cd "${buildDir}"
 runcmd cmake -DCMAKE_INSTALL_PREFIX:PATH="${installDir}" ../
 runcmd make clean
 runcmd make -j"${numberOfCores}"
-
 if $install; then
     runcmd sudo make -j"${numberOfCores}" install
 else
