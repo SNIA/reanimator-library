@@ -3,16 +3,23 @@ project(strace2ds)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-O4")
 find_package(LibXml2 REQUIRED)
+
 find_library(LINTEL_LIBRARY
     NAMES Lintel libLintel
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
     REQUIRED)
 find_library(DATASERIES_LIBRARY
     NAMES DataSeries libDataSeries
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
     REQUIRED)
 find_library(TCMALLOC_LIBRARY
     NAMES TCMalloc libtcmalloc tcmalloc
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
     REQUIRED)
+
 include_directories(${PROJECT_SOURCE_DIR}/include ${CMAKE_INSTALL_PREFIX}/include ${LIBXML2_INCLUDE_DIR})
+
+# Source Files
 set(STRACE2DS_SRCS
     src/DataSeriesOutputModule.cpp
     src/MakeCloseArgsMap.cpp
@@ -117,18 +124,23 @@ set(STRACE2DS_SRCS
     src/MakeSendtoArgsMap.cpp
     src/MakeSendmsgArgsMap.cpp
     src/strace2ds.cpp)
+
 set(STRACE2DS_INCLUDES
     include/DataSeriesOutputModule.hpp
     include/strace2ds-enums.h
     include/strace2ds.h)
+
 set(STRACE2DS_TABLES
     tables/snia_syscall_fields.table)
+
 add_library(strace2ds STATIC ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 add_library(strace2ds_shared SHARED ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
 set_target_properties(strace2ds_shared PROPERTIES OUTPUT_NAME strace2ds)
+
 target_link_libraries(strace2ds ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
 target_link_libraries(strace2ds_shared ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
-install(TARGETS strace2ds ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
-install(TARGETS strace2ds_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
+
+install(FILES ${PROJECT_SOURCE_DIR}/build/libstrace2ds.so DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
+install(FILES ${PROJECT_SOURCE_DIR}/build/libstrace2ds.a DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
 install(FILES ${STRACE2DS_INCLUDES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/include)
 install(FILES ${STRACE2DS_TABLES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/tables)

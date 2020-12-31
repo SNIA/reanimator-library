@@ -76,7 +76,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# TODO: Let users know if they mistakenly specify --install and --install-dir
 if $install; then
     installDir="/usr/local"
 fi
