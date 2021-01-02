@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 project(strace2ds)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-O4")
+
+# Find required packages
 find_package(LibXml2 REQUIRED)
 
+# Find libraries and save locations into variables
 find_library(LINTEL_LIBRARY
     NAMES Lintel libLintel
     PATHS ${CMAKE_INSTALL_PREFIX}/lib
@@ -17,9 +20,13 @@ find_library(TCMALLOC_LIBRARY
     PATHS ${CMAKE_INSTALL_PREFIX}/lib
     REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/include ${CMAKE_INSTALL_PREFIX}/include ${LIBXML2_INCLUDE_DIR})
+# Include directories
+include_directories(
+    ${PROJECT_SOURCE_DIR}/include
+    ${CMAKE_INSTALL_PREFIX}/include
+    ${LIBXML2_INCLUDE_DIR})
 
-# Source Files
+# Source files
 set(STRACE2DS_SRCS
     src/DataSeriesOutputModule.cpp
     src/MakeCloseArgsMap.cpp
@@ -125,22 +132,47 @@ set(STRACE2DS_SRCS
     src/MakeSendmsgArgsMap.cpp
     src/strace2ds.cpp)
 
+# Include files
 set(STRACE2DS_INCLUDES
     include/DataSeriesOutputModule.hpp
     include/strace2ds-enums.h
     include/strace2ds.h)
 
+# Table files to be used by strace2ds (reanimator-library)
 set(STRACE2DS_TABLES
     tables/snia_syscall_fields.table)
 
-add_library(strace2ds STATIC ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
-add_library(strace2ds_shared SHARED ${STRACE2DS_SRCS} ${STRACE2DS_INCLUDES})
+# Create a static libstrace2ds.a library
+add_library(strace2ds STATIC
+    ${STRACE2DS_SRCS}
+    ${STRACE2DS_INCLUDES})
+
+# Create a shared object
+add_library(strace2ds_shared SHARED
+    ${STRACE2DS_SRCS}
+    ${STRACE2DS_INCLUDES})
+
+# Change libstrace2ds_shared.so to libstrace2ds.so
 set_target_properties(strace2ds_shared PROPERTIES OUTPUT_NAME strace2ds)
 
-target_link_libraries(strace2ds ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
-target_link_libraries(strace2ds_shared ${DATASERIES_LIBRARY} ${LINTEL_LIBRARY} ${TCMALLOC_LIBRARY} ${LIBXML2_LIBRARIES})
+# Specify libraries to link with
+set(STRACE2DS_LINK_LIBRARIES
+    ${DATASERIES_LIBRARY}
+    ${LINTEL_LIBRARY}
+    ${TCMALLOC_LIBRARY}
+    ${LIBXML2_LIBRARIES})
+target_link_libraries(strace2ds ${STRACE2DS_LINK_LIBRARIES})
+target_link_libraries(strace2ds_shared ${STRACE2DS_LINK_LIBRARIES})
 
-install(FILES ${PROJECT_SOURCE_DIR}/build/libstrace2ds.so DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
-install(FILES ${PROJECT_SOURCE_DIR}/build/libstrace2ds.a DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib)
-install(FILES ${STRACE2DS_INCLUDES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/include)
-install(FILES ${STRACE2DS_TABLES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/tables)
+# Install rules
+set(INSTALL_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libstrace2ds.a
+    DESTINATION ${INSTALL_DIRECTORY}/lib)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libstrace2ds.so
+    DESTINATION ${INSTALL_DIRECTORY}/lib)
+install(FILES ${STRACE2DS_INCLUDES}
+    DESTINATION ${INSTALL_DIRECTORY}/include)
+install(FILES ${STRACE2DS_TABLES}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/tables)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xml
+    DESTINATION ${INSTALL_DIRECTORY})
