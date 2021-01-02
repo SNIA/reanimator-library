@@ -6,3 +6,5 @@
 autom4te.cache
 BUILD/
 build/
+strace2ds-enums.h
+tables/snia_syscall_fields.table
