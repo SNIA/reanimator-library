@@ -394,6 +394,9 @@ class DataSeriesOutputModule {
   // Maps Symlinkat System Call <field, value> pairs
   void makeSymlinkatArgsMap(void **args_map, long *args, void **v_args);
 
+  // Maps SyncFileRange System Call <field, value> pairs
+  void makeSyncFileRangeArgsMap(void **args_map, long *args, void **v_args);
+
   // Maps Truncate System Call <field, value> pairs
   void makeTruncateArgsMap(void **args_map, long *args, void **v_args);
 

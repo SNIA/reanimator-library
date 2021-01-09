@@ -331,6 +331,8 @@ void DataSeriesOutputModule::initArgsMapFuncPtr() {
   func_ptr_map_["symlink"] = &DataSeriesOutputModule::makeSymlinkArgsMap;
   // symlinkat system call
   func_ptr_map_["symlinkat"] = &DataSeriesOutputModule::makeSymlinkatArgsMap;
+  // sync_file_range system call
+  func_ptr_map_["sync_file_range"] = &DataSeriesOutputModule::makeSyncFileRangeArgsMap;
   // truncate system call
   func_ptr_map_["truncate"] = &DataSeriesOutputModule::makeTruncateArgsMap;
   // umask system call
