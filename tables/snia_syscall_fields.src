@@ -825,7 +825,7 @@ mmappwrite	descriptor	0	int32
 mmappwrite	bytes_requested	0	int64
 mmappwrite	data_written	1	variable32
 mmappwrite	offset	0	int64
-sync_file_range descriptor  0   int32
-sync_file_range offset  0   int64
-sync_file_range offset  0   int64
-sync_file_range flags   0   int32
+sync_file_range	descriptor	0	int32
+sync_file_range	offset	0	int64
+sync_file_range	offset	0	int64
+sync_file_range	flags	0	int32
