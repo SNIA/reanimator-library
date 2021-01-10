@@ -130,6 +130,7 @@ set(STRACE2DS_SRCS
     src/MakeSendArgsMap.cpp
     src/MakeSendtoArgsMap.cpp
     src/MakeSendmsgArgsMap.cpp
+    src/MakeSyncFileRangeMap.cpp
     src/strace2ds.cpp)
 
 # Include files
