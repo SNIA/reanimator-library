@@ -6,6 +6,7 @@
 
 numberOfCores="$(nproc --all)"
 install=false
+configArgs=""
 rootDir="$(dirname $(realpath $0))"
 buildDir="${rootDir}/build"
 repositoryDir="${buildDir}/repositories"
@@ -36,7 +37,7 @@ Usage: $0 [options...]
 Options:
     --config-args ARGS     Append ARGS to every ./configure command
     --install              Install libraries and binaries under /usr/local
-    --install-packages     Automatically use apt-get to install missing packages
+    --install-dir DIR      Install libraries and binaries to DIR (ignored if --install)
     -h, --help             Print this help message
 EOF
     ) >&2
@@ -49,12 +50,10 @@ EOF
 
 while [[ $# -gt 0 ]]; do
     key="$1"
-
     case "${key}" in
-        --dataseries-dir)
-            customDataseriesDir=true
+        --config-args)
             shift # past argument
-            dataseriesDir="$1"
+            configArgs="$1"
             shift # past value
             ;;
         --install)
@@ -76,6 +75,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# --install-dir is ignored if --install is specified
 if $install; then
     installDir="/usr/local"
 fi
@@ -125,7 +125,7 @@ runcmd cd gperftools
 runcmd ./autogen.sh
 runcmd ./configure --prefix="${installDir}" "${configArgs}"
 runcmd make -j"${numberOfCores}"
-if [[ "${install}" == true ]]; then
+if $install; then
     runcmd sudo make -j"${numberOfCores}" install
 else
     runcmd make -j"${numberOfCores}" install

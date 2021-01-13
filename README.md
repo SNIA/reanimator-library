@@ -9,7 +9,7 @@ output traces in the DataSeries format.
 Dependencies
 ------------
 
-Currently, only Ubuntu 16 is officially supported.
+Currently, only Ubuntu 16 and 18 are officially supported.
 
 - [Lintel] - general utility library for DataSeries
 - [DataSeries] - data format for structured serial data
@@ -25,52 +25,41 @@ Currently, only Ubuntu 16 is officially supported.
 Build Instructions
 ------------------
 
+Install the following required programs and libraries. On Ubuntu 16 and 18, all the above requirements are available through the APT package manager.:
+
+```plaintext
+git cmake perl autoconf automake gcc g++ libtool libboost-dev libboost-thread-dev libboost-program-options-dev build-essential libxml2-dev zlib1g-dev
+```
+
+### Automated Build
+
+After installing the required programs and libraries, run `build-reanimator-library.sh` to automatically build strace2ds. All arguments are optional:
+
+| Argument             | Description                                                    |
+| -------------------- | -------------------------------------------------------------- |
+| `--install`          | Install libraries and binaries under `/usr/local`              |
+| `--install-dir DIR`  | Install libraries and binaries to DIR (ignored if `--install`) |
+| `--config-args ARGS` | Append ARGS to every `./configure` command                     |
+| `-h, --help`         | Display a help message                                         |
+
+
 ### Manual Build
 
-1. Install the following required programs and libraries:
+Manually building strace2ds closely resembles the steps taken in `build-reanimator-library.sh`.
 
-   ```plaintext
-   git cmake perl autoconf automake gcc g++ libtool libboost-dev libboost-thread-dev libboost-program-options-dev build-essential libxml2-dev zlib1g-dev
-   ```
+1. Install [Lintel] by running cmake . && make && make install at the root of the Lintel repository.
 
-   On Ubuntu 16, all the above requirements are available through the APT
-   package manager.
+1. Install [DataSeries] by running cmake . && make && make install at the root of the DataSeries repository.
 
-2. Install [Lintel] by running `cmake . && make && make install` at the root of
-   the Lintel repository.
+1. Install [tcmalloc] from the gperftools repository. See the gperftools [`INSTALL`](https://github.com/gperftools/gperftools/blob/master/INSTALL) file for detailed instructions.
 
-3. Install [DataSeries] by running `cmake . && make && make install` at the root
-   of the DataSeries repository.
+1. Navigate to the `tables/` subdirectory and run `perl gen-xml-enums.pl` to update the .xml files.
 
-4. Install [tcmalloc] from the gperftools repository. See the gperftools
-   [`INSTALL`](https://github.com/gperftools/gperftools/blob/master/INSTALL)
-   file for detailed instructions.
+1. Create a subdirectory named `build` in the strace2ds-library directory and navigate to it. Run `cp -r ../xml ./` to copy the xml folder into the build directory.
 
-5. In the strace2ds-library directory, run `autoreconf -v -i` to ensure build
-   scripts are up-to-date.
+1. `cd` into your build directory and run `cmake -DCMAKE_INSTALL_PREFIX:PATH=<Install Here> ../`. Specifying a custom install directory for `make install` via `-DCMAKE_INSTALL_PREFIX:PATH=<Install Here>` is optional.
 
-6. Navigate to the `tables/` subdirectory and run `perl gen-xml-enums.pl` to
-   update the .xml files.
-
-7. Create a subdirectory named `BUILD/` in the strace2ds-library directory and
-   navigate to it. Run `cp -r ../xml ./` to copy the xml folder into the build
-   directory.
-
-8. Run the command
-
-   ```bash
-   ../configure --enable-shared --disable-static
-   ```
-
-   If you have installed the other libraries in a nonstandard directory, you will need to change the `CPPFLAGS` and `LDFLAGS` environment variables before running `configure`. For example, if you have installed tcmalloc in `$HOME/tcmalloc`, you will need to run
-
-   ```bash
-   CPPFLAGS="-I$HOME/tcmalloc/include" LDFLAGS="-Xlinker -rpath=$HOME/tcmalloc/lib -L$HOME/tcmalloc/lib" ../configure --enable-shared --disable-static
-   ```
-
-   For more information on `CPPFLAGS` and `LDFLAGS`, run `../configure --help`.
-
-9. Run `make && make install` to build and install strace2ds-library in `/usr/local`.
+1. Run `make` and `make install` to build and install strace2ds.
 
 [strace]: https://strace.io
 [DataSeries]: https://github.com/dataseries/dataseries
