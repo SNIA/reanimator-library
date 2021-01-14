@@ -88,6 +88,8 @@ runcmd cd tables
 runcmd perl gen-xml-enums.pl
 runcmd cd ../
 runcmd cp -r ./xml "${buildDir}"
+runcmd rm -f include/strace2ds-enums.h
+runcmd cp strace2ds-enums.h include
 runcmd cd "${buildDir}"
 
 # Cloning all repositories
