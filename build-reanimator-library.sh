@@ -111,7 +111,7 @@ runcmd cd "${repositoryDir}"
 # Building DataSeries
 # -------------------
 runcmd cd DataSeries
-runcmd cmake -DCMAKE_INSTALL_PREFIX="${installDir}" .
+runcmd cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_INSTALL_PREFIX="${installDir}" .
 if $install; then
     runcmd sudo make -j"${numberOfCores}" install
 else
