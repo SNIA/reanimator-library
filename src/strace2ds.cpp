@@ -159,7 +159,7 @@ void ds_add_to_untraced_set(DataSeriesOutputModule *ds_module,
            ->untraced_sys_call_counts_[sys_call_number]) {
     ((DataSeriesOutputModule *)ds_module)
         ->untraced_sys_call_counts_[sys_call_number] = 1;
-    std::cerr << "WARNING: Ignoring to replay system call: " << sys_call_name
+    std::cerr << "WARNING: Ignoring system call: " << sys_call_name
               << " (" << sys_call_number << ")" << std::endl;
   } else {
     ((DataSeriesOutputModule *)ds_module)
