@@ -81,7 +81,6 @@ if $install; then
 fi
 
 # Set up the build directory
-runcmd /bin/rm -rf "${buildDir}"
 runcmd mkdir -p "${buildDir}"
 runcmd mkdir -p xml
 runcmd cd tables
