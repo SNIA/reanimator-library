@@ -149,7 +149,7 @@ void ds_print_warning(DataSeriesOutputModule *ds_module,
 }
 
 /*
- * If a program, attempts to trace a system call which are chosen
+ * If a program attempts to trace a system call which is chosen
  * to be ignored while replaying, maintain a set of untraced
  * system calls along with their count.
  */
@@ -159,7 +159,7 @@ void ds_add_to_untraced_set(DataSeriesOutputModule *ds_module,
            ->untraced_sys_call_counts_[sys_call_number]) {
     ((DataSeriesOutputModule *)ds_module)
         ->untraced_sys_call_counts_[sys_call_number] = 1;
-    std::cerr << "WARNING: Ignoring system call: " << sys_call_name
+    std::cerr << "WARNING: Replayer will not replay syscall: " << sys_call_name
               << " (" << sys_call_number << ")" << std::endl;
   } else {
     ((DataSeriesOutputModule *)ds_module)
