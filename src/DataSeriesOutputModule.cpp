@@ -466,7 +466,7 @@ bool DataSeriesOutputModule::writeRecord(
   if (common_fields[DS_COMMON_FIELD_TIME_CALLED] != NULL) {
     if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
       time_called_Tfrac =
-          *((uint64_t *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
+          *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
     } else {
       // Convert tv_time_called to Tfracs
       time_called_Tfrac = timespec_to_Tfrac(
@@ -479,7 +479,7 @@ bool DataSeriesOutputModule::writeRecord(
   if (common_fields[DS_COMMON_FIELD_TIME_RETURNED] != NULL) {
     if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
       time_returned_Tfrac =
-          *((uint64_t *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
+          *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
     } else {
       // Convert tv_time_returned to Tfracs
       time_returned_Tfrac = timespec_to_Tfrac(
