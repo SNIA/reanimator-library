@@ -432,7 +432,7 @@ bool DataSeriesOutputModule::writeRecord(
   void *sys_call_args_map[MAX_SYSCALL_FIELDS];
   struct timeval tv_time_recorded;
   int var32_len;
-  uint64_t time_called_Tfrac, time_returned_Tfrac;
+  uint64_t time_called, time_returned;
   SysCallArgsMapFuncPtr fxn = NULL;
   OutputModule *output_module = NULL;
   FieldMap *field_map = NULL;
@@ -464,28 +464,14 @@ bool DataSeriesOutputModule::writeRecord(
 
   /* set time called field */
   if (common_fields[DS_COMMON_FIELD_TIME_CALLED] != NULL) {
-    if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
-      time_called_Tfrac =
-          *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
-    } else {
-      // Convert tv_time_called to Tfracs
-      time_called_Tfrac = timespec_to_Tfrac(
-          *(struct timespec *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
-    }
-    sys_call_args_map[SYSCALL_FIELD_TIME_CALLED] = &time_called_Tfrac;
+    time_called = *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_CALLED]);
+    sys_call_args_map[SYSCALL_FIELD_TIME_CALLED] = &time_called;
   }
 
   /* set time returned field */
   if (common_fields[DS_COMMON_FIELD_TIME_RETURNED] != NULL) {
-    if (scno == LTTNG_DEFAULT_SYSCALL_NUM) {
-      time_returned_Tfrac =
-          *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
-    } else {
-      // Convert tv_time_returned to Tfracs
-      time_returned_Tfrac = timespec_to_Tfrac(
-          *(struct timespec *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
-    }
-    sys_call_args_map[SYSCALL_FIELD_TIME_RETURNED] = &time_returned_Tfrac;
+    time_returned = *((int64_t *)common_fields[DS_COMMON_FIELD_TIME_RETURNED]);
+    sys_call_args_map[SYSCALL_FIELD_TIME_RETURNED] = &time_returned;
   }
 
   /* set executing pid field */
