@@ -292,6 +292,9 @@ class DataSeriesOutputModule {
   // Convert time from a timespec to a uint64_t in Tfracs
   uint64_t timespec_to_Tfrac(struct timespec ts);
 
+  // Convert time from a timespec to a uint64_t in nanoseconds
+  uint64_t timeval_to_ns(struct timeval tv);
+
   // Maps Read System Call <field, value> pairs
   void makeReadArgsMap(void **args_map, long *args, void **v_args);
 
