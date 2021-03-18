@@ -560,8 +560,8 @@ bool DataSeriesOutputModule::writeRecord(
    */
   gettimeofday(&tv_time_recorded, NULL);
   // Convert time_recorded_timeval to Tfracs and add it to the map
-  uint64_t time_recorded_Tfrac = timeval_to_Tfrac(tv_time_recorded);
-  sys_call_args_map[SYSCALL_FIELD_TIME_RECORDED] = &time_recorded_Tfrac;
+  uint64_t time_recorded_ns = timeval_to_ns(tv_time_recorded);
+  sys_call_args_map[SYSCALL_FIELD_TIME_RECORDED] = &time_recorded_ns;
 
   // Write values to the new record
   unsigned int field_enum;
@@ -1049,4 +1049,9 @@ uint64_t DataSeriesOutputModule::timeval_to_Tfrac(struct timeval tv) {
 uint64_t DataSeriesOutputModule::sec_to_Tfrac(time_t time) {
   uint64_t time_Tfracs = (uint64_t)(time * (((uint64_t)1) << 32));
   return time_Tfracs;
+}
+
+uint64_t DataSeriesOutputModule::timeval_to_ns(struct timeval tv) {
+  uint64_t time_ns = ((uint64_t) tv.tv_sec) * 1000000000 + ((uint64_t) tv.tv_usec) * 1000;
+  return time_ns;
 }
